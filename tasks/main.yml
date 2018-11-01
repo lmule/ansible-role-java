@@ -1,0 +1,36 @@
+---
+# tasks file for java
+#
+#- name: check {{ java_tgz_home }} exists
+  #stat:
+    #path: "{{ java_tgz_home }}"
+  #register: java_tgz_home
+
+- name: create temp java directory
+  file:
+    path: "{{ java_tgz_home }}"
+    state: "directory"
+
+- name: upload java .tar.gz to remote
+  copy:
+    src: "{{ item }}"
+    dest: "{{ java_tgz_home }}/"
+  with_fileglob:
+    - ./files/jdk1.8.0_192/*
+
+- name: merge files
+  shell: "cat {{ java_tgz_home }}/* > {{ java_tgz_home }}.tar.gz"
+
+- name: unarchive java .tar.gz
+  unarchive:
+    copy: no
+    src: "{{ java_tgz_home }}.tar.gz"
+    dest: "{{ soft_install_home }}"
+    owner: "work"
+    group: "work"
+
+- name: set java_home
+  template:
+    src: ./templates/java_home.sh.j2
+    dest: /etc/profile.d/java_home.sh
+    mode: 0644

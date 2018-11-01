@@ -1,0 +1,8 @@
+---
+# defaults file for java
+
+soft_install_home: "/home/work/soft/"
+soft_temp_home: "/home/work/temp/"
+java_version: "jdk1.8.0_192"
+java_tgz_home: "{{ soft_temp_home }}{{ java_version }}"
+java_home: "{{ soft_install_home }}{{ java_version }}"
